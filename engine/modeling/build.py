@@ -8,5 +8,5 @@ _META_ARCHITECTURES = {"MNISTNet": MNISTNet}
 
 
 def build_model(cfg):
-    meta_arch = _META_ARCHITECTURES[cfg.MODEL.META_ARCHITECTURE]
+    meta_arch = _META_ARCHITECTURES[cfg.MODEL.META_ARCH]
     return meta_arch(cfg)

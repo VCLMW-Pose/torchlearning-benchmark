@@ -22,8 +22,8 @@ _C = CN()
 
 _C.MODEL = CN()
 _C.MODEL.DEVICE = "cuda"
-_C.MODEL.META_ARCH = "mnist"
-_C.MODEL.CONFIG = "configs/mnist_net/mnist_net.json"
+_C.MODEL.META_ARCH = "MNISTNet"
+_C.MODEL.CONFIG = "../configs/mnist_net/mnist_net.json"
 
 # If the WEIGHT starts with a catalog://, like :R-50, the code will look for
 # the path in paths_catalog. Else, it will use it as the specified absolute

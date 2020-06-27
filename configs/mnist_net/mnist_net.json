@@ -1,0 +1,9 @@
+{
+    "model": "MNISTNet",
+    "backbone": "SimpleMLP",
+    "options": {
+        "input": 784,
+        "mlp_hiddens": [256, 256],
+        "classes": 10
+    }
+}
