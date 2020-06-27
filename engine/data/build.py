@@ -99,8 +99,6 @@ def make_data_loader(cfg, is_train=True, start_iter=0):
         batch_sampler = make_batch_data_sampler(
             dataset, sampler, images_per_batch, num_iters, start_iter
         )
-        # collator = BBoxAugCollator() if not is_train and cfg.TEST.BBOX_AUG.ENABLED else \
-        #     BatchCollator(cfg.DATALOADER.SIZE_DIVISIBILITY)
         collator = None
         num_workers = cfg.DATALOADER.NUM_WORKERS
         data_loader = torch.utils.data.DataLoader(
