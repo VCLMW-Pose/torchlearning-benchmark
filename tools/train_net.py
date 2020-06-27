@@ -1,5 +1,5 @@
 # Copyright (c) MW-Pose Group, 2020
-# Modified from maskrcnn-benchmark train_net.py
+# Modified from facebook maskrcnn-benchmark train_net.py
 
 
 import argparse

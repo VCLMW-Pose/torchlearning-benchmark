@@ -1,7 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 # Set up custom environment before nearly anything else is imported
-# NOTE: this should be the first import (no not reorder)
-from maskrcnn_benchmark.utils.env import setup_environment  # noqa F401 isort:skip
+# NOTE: this should be the first import (no not reorder
 
 import argparse
 import os
@@ -12,12 +11,6 @@ from engine.modeling import build_model
 from engine.data import build_data_loader
 from engine.utils.logger import setup_logger
 from engine.utils.checkpoint import Checkpointer
-
-# Check if we can enable mixed-precision via apex.amp
-try:
-    from apex import amp
-except ImportError:
-    raise ImportError('Use APEX for mixed precision via apex.amp')
 
 
 def main():
