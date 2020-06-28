@@ -16,6 +16,7 @@ class MNISTNet(nn.Module):
         super(MNISTNet, self).__init__()
         with open(cfg.MODEL.CONFIG, 'r') as f:
             self.config = json.load(f)
+            f.close()
 
         backbone = self.config["backbone"]
         opt = self.config["options"]

@@ -1,5 +1,5 @@
 ## torchlearning-benchmark
-This repository is designed for generalized supervised learning tasks on PyTorch based on maskrcnn-benchmark. torchlearning-benchmark provides complete support for supervised learning pipeline including:
+This repository is designed for generalized supervised learning tasks on PyTorch. torchlearning-benchmark provides complete support for supervised learning pipeline including:
 + Data set registry, managing and building 
 + Learning and testing on multiple data set simultaneously
 + Complete customize options for data sampler, batch sampler, collate function in data loader

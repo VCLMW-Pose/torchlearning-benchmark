@@ -75,7 +75,7 @@ def make_batch_data_sampler(
     return batch_sampler
 
 
-def make_data_loader(cfg, is_train=True, start_iter=0):
+def build_data_loader(cfg, is_train=True, start_iter=0):
     if is_train:
         images_per_batch = cfg.SOLVER.IMS_PER_BATCH
         shuffle = cfg.SOLVER.SHUFFLE
