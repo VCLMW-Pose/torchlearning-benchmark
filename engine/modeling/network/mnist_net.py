@@ -3,6 +3,7 @@
 import json
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from engine.modeling.backbone import build_backbone
 
@@ -28,5 +29,21 @@ class MNISTNet(nn.Module):
 
         self.mlp = build_backbone(backbone, **args)
 
-    def forward(self, input):
-        return self.mlp(input)
+    def forward(self, image, target=None):
+        """
+        Args:
+            image (torch.Tensor): Mini-batch images
+            target (ImageTargetContainer): collated target
+        """
+        logistic = self.mlp(image)
+        # Compute loss
+        if target:
+            labels = target["labels"]
+            loss = F.cross_entropy(logistic, labels)
+            return loss
+
+        # Get classification prediction
+        pred = logistic.data.max(1).indices
+        return pred
+
+

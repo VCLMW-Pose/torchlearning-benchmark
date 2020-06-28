@@ -32,7 +32,6 @@ def build_transforms(cfg, is_train=True):
                 factory(
                     mean=cfg.INPUT.PIXEL_MEAN,
                     std=cfg.INPUT.PIXEL_STD,
-                    to_bgr255=cfg.INPUT.TO_RGB255
                 )
             ]
         elif trans == "ColorJitter":

@@ -1,0 +1,48 @@
+MODEL:
+  DEVICE: "cuda"
+  META_ARCH: "MNISTNet"
+  CONFIG: "../configs/mnist_net/mnist_net.json"
+  WEIGHT: ""
+
+INPUT:
+  TRANSFORMS: ("Resize", "ToTensor", "Normalize")
+  # Resize
+  MAX_SIZE_TRAIN: 28
+  MIN_SIZE_TRAIN: 28
+  MAX_SIZE_TEST: 28
+  MIN_SIZE_TEST: 28
+
+  # Normalize
+  PIXEL_MEAN: [122]
+  PIXEL_STD: [1.]
+
+DATASET:
+  TRAIN: ("mnist_train",)
+  TEST: ("mnist_test",)
+
+DATALOADER:
+  NUM_WORKERS: 4
+
+SOLVER:
+  MAX_ITER: 40000
+
+  OPTIMIZER: "SGD"
+  BASE_LR: 0.001
+  BIAS_LR_FACTOR: 2
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0
+  MOMENTUM: 0.9
+
+  SCHEDULER: "WarmupMultiStep"
+  SOLVER.GAMMA: 0.1
+  SOLVER.STEPSL: (10000,)
+  WARMUP_FACTOR: 1. / 3
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: "linear"
+
+  CHECKPOINT_PERIDO: 2500
+  TEST_PERIOD: 2500
+  IMS_PER_BATCH: 64
+
+OUTPUT_DIR: "../models/mnist_6.28/"
+SAVE_TO_DISK: True

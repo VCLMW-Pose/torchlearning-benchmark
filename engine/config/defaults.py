@@ -97,42 +97,6 @@ _C.DATALOADER.SIZE_DIVISIBILITY = 0
 # are not batched with portrait images.
 _C.DATALOADER.ASPECT_RATIO_GROUPING = True
 
-
-# ---------------------------------------------------------------------------- #
-# Backbone options
-# ---------------------------------------------------------------------------- #
-_C.MODEL.BACKBONE = CN()
-
-# The backbone conv body to use
-# The string must match a function that is imported in modeling.model_builder
-# (e.g., 'FPN.add_fpn_ResNet101_conv5_body' to specify a ResNet-101-FPN
-# backbone)
-_C.MODEL.BACKBONE.CONV_BODY = "R-50-C4"
-
-# Add StopGrad at a specified stage so the bottom layers are frozen
-_C.MODEL.BACKBONE.FREEZE_CONV_BODY_AT = 2
-
-
-# ---------------------------------------------------------------------------- #
-# FPN options
-# ---------------------------------------------------------------------------- #
-_C.MODEL.FPN = CN()
-_C.MODEL.FPN.USE_GN = False
-_C.MODEL.FPN.USE_RELU = False
-
-
-# ---------------------------------------------------------------------------- #
-# Group Norm options
-# ---------------------------------------------------------------------------- #
-_C.MODEL.GROUP_NORM = CN()
-# Number of dimensions per group in GroupNorm (-1 if using NUM_GROUPS)
-_C.MODEL.GROUP_NORM.DIM_PER_GP = -1
-# Number of groups in GroupNorm (-1 if using DIM_PER_GP)
-_C.MODEL.GROUP_NORM.NUM_GROUPS = 32
-# GroupNorm's small constant in the denominator
-_C.MODEL.GROUP_NORM.EPSILON = 1e-5
-
-
 # ---------------------------------------------------------------------------- #
 # Solver
 # ---------------------------------------------------------------------------- #

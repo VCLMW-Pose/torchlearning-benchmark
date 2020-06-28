@@ -109,14 +109,11 @@ class ToTensor(object):
 
 
 class Normalize(object):
-    def __init__(self, mean, std, to_bgr255=True):
+    def __init__(self, mean, std):
         self.mean = mean
         self.std = std
-        self.to_bgr255 = to_bgr255
 
     def __call__(self, image, target=None):
-        if self.to_bgr255:
-            image = image[[2, 1, 0]] * 255
         image = F.normalize(image, mean=self.mean, std=self.std)
         if target is None:
             return image
