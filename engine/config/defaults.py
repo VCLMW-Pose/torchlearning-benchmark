@@ -35,6 +35,14 @@ _C.MODEL.WEIGHT = ""
 # INPUT
 # -----------------------------------------------------------------------------
 _C.INPUT = CN()
+
+# Add expected transforms to the tuple, and edit transform configurations with
+# following settings.
+_C.INPUT.TRANSFORMS = ()
+
+
+# ===========================  Image transforms  ==============================
+# --------------------------------  Resize  -----------------------------------
 # Size of the smallest side of the image during training
 _C.INPUT.MIN_SIZE_TRAIN = (800,)  # (800,)
 # Maximum size of the side of the image during training
@@ -43,6 +51,8 @@ _C.INPUT.MAX_SIZE_TRAIN = 1333
 _C.INPUT.MIN_SIZE_TEST = 800
 # Maximum size of the side of the image during testing
 _C.INPUT.MAX_SIZE_TEST = 1333
+
+# ------------------------------  Normalize  ----------------------------------
 # Values to be used for image normalization
 _C.INPUT.PIXEL_MEAN = [102.9801, 115.9465, 122.7717]
 # Values to be used for image normalization
@@ -50,15 +60,19 @@ _C.INPUT.PIXEL_STD = [1., 1., 1.]
 # Convert image to BGR format (for Caffe2 models), in range 0-255
 _C.INPUT.TO_BGR255 = True
 
-# Image ColorJitter
+# -----------------------------  ColorJitter  ----------------------------------
 _C.INPUT.BRIGHTNESS = 0.0
 _C.INPUT.CONTRAST = 0.0
 _C.INPUT.SATURATION = 0.0
 _C.INPUT.HUE = 0.0
 
-# Flips
+
+# --------------------------  RandomHorizontalFlip  ---------------------------
 _C.INPUT.HORIZONTAL_FLIP_PROB_TRAIN = 0.5
+
+# ---------------------------  RandomVerticalFlip  ----------------------------
 _C.INPUT.VERTICAL_FLIP_PROB_TRAIN = 0.0
+
 
 # -----------------------------------------------------------------------------
 # Dataset
@@ -125,13 +139,15 @@ _C.MODEL.GROUP_NORM.EPSILON = 1e-5
 _C.SOLVER = CN()
 _C.SOLVER.MAX_ITER = 40000
 
+_C.SOLVER.OPTIMIZER = "Momentum"
 _C.SOLVER.BASE_LR = 0.001
 _C.SOLVER.BIAS_LR_FACTOR = 2
 
 _C.SOLVER.MOMENTUM = 0.9
-
 _C.SOLVER.WEIGHT_DECAY = 0.0005
 _C.SOLVER.WEIGHT_DECAY_BIAS = 0
+
+_C.SOLVER.SCHEDULER = "WarmupMultiStep"
 
 _C.SOLVER.GAMMA = 0.1
 _C.SOLVER.STEPS = (30000,)
