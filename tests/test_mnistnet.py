@@ -8,5 +8,5 @@ def test_mnistnet(cfg):
 
 
 if __name__ == "__main__":
-    cfg.merge_from_file("../configs/simple_alexnet_mnist.yaml")
+    cfg.merge_from_file("../configs/simple_mlp_mnist.yaml")
     test_mnistnet(cfg)
