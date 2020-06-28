@@ -6,15 +6,15 @@ from copy import deepcopy
 
 
 class DatasetCatalog(object):
-    DATA_DIR = "datasets"
+    DATA_DIR = "../datasets"
     DATASETS = {
         "mnist_train": {
-            "img_dir": "coco/train2017",
-            "ann_file": "coco/annotations/instances_train2017.json"
+            "img_dir": "mnist/train",
+            "ann_file": "mnist/train/labels"
         },
         "mnist_test": {
-            "img_dir": "coco/train2017",
-            "ann_file": "coco/annotations/instances_train2017.json"
+            "img_dir": "mnist/test",
+            "ann_file": "mnist/test/labels"
         }
     }
 
@@ -25,7 +25,7 @@ class DatasetCatalog(object):
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
                 root=os.path.join(data_dir, attrs["img_dir"]),
-                ann_file=os.path.join(data_dir, attrs["ann_files"]),
+                ann_file=os.path.join(data_dir, attrs["ann_file"]),
             )
             return dict(
                 factory="MNIST",

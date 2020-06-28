@@ -39,4 +39,4 @@ class SimpleMLP(nn.Module):
     def forward(self, input):
         input = input.view(input.size(0), -1)
         assert input.size(1) == self.input_dims
-        return self.model(input)
+        return self.models(input)

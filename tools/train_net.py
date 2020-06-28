@@ -13,6 +13,7 @@ from engine.inference import inference
 from engine.modeling import build_model
 from engine.data import build_data_loader
 from engine.utils.logger import setup_logger
+from engine.utils.miscellaneous import mkdir
 from engine.utils.checkpoint import Checkpointer
 from engine.solver import build_optimizer, build_lr_scheduler
 
@@ -32,7 +33,7 @@ def train(cfg):
     save_to_disk = cfg.SAVE_TO_DISK
 
     checkpointer = Checkpointer(
-        cfg, model, optimizer, scheduler, output_dir, save_to_disk
+        model, optimizer, scheduler, output_dir, save_to_disk
     )
     extra_checkpoint_data = checkpointer.load(cfg.MODEL.WEIGHT)
     arguments.update(extra_checkpoint_data)
@@ -80,20 +81,15 @@ def run_test(cfg, model):
     if cfg.OUTPUT_DIR:
         for idx, dataset_name in enumerate(dataset_names):
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
-            os.mkdir(output_folder)
+            mkdir(output_folder)
             output_folders[idx] = output_folder
-    data_loaders_val = build_data_loader(cfg, is_train=False)
+    data_loaders_val = build_data_loader(cfg, is_train=False, is_for_period=False)
     for output_folder, dataset_name, data_loader_val in zip(output_folders, dataset_names, data_loaders_val):
         inference(
             model,
             data_loader_val,
             dataset_name=dataset_name,
-            iou_types=iou_types,
-            box_only=False if cfg.MODEL.RETINANET_ON else cfg.MODEL.RPN_ONLY,
-            bbox_aug=cfg.TEST.BBOX_AUG.ENABLED,
             device=cfg.MODEL.DEVICE,
-            expected_results=cfg.TEST.EXPECTED_RESULTS,
-            expected_results_sigma_tol=cfg.TEST.EXPECTED_RESULTS_SIGMA_TOL,
             output_folder=output_folder,
         )
 
@@ -129,9 +125,9 @@ def main():
 
     output_dir = cfg.OUTPUT_DIR
     if output_dir:
-        os.mkdir(output_dir)
+        mkdir(output_dir)
 
-    logger = setup_logger("torchlearning_benchmark", output_dir)
+    logger = setup_logger("torchlearning-benchmark", output_dir)
     logger.info(args)
 
     logger.info("Loaded configuration file {}".format(args.config_file))

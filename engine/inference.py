@@ -23,7 +23,14 @@ def compute_on_dataset(model, data_loader, device, timer=None):
                 output = model(images.to(device))
             if timer:
                 timer.toc()
-            output = [o.to(cpu_device) for o in output]
+
+            if isinstance(output, dict):
+                for k, v in output.items():
+                    output[k] = v.to(cpu_device)
+            elif isinstance(output, list):
+                output = [o.to(cpu_device) for o in output]
+            else:
+                output = output.to(cpu_device)
         results_dict.update(
             {idx: output}
         )
@@ -37,7 +44,6 @@ def inference(
         model,
         data_loader,
         dataset_name,
-        bbox_aug=False,
         device="cuda",
         output_folder=None,
 ):
@@ -49,7 +55,7 @@ def inference(
     total_timer = Timer()
     inference_timer = Timer()
     total_timer.tic()
-    predictions, gts = compute_on_dataset(model, data_loader, device, bbox_aug, inference_timer)
+    predictions, gts = compute_on_dataset(model, data_loader, device, inference_timer)
 
     # wait for all processes to complete before measuring the time
     total_time = total_timer.toc()

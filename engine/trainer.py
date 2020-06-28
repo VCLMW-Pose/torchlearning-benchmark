@@ -35,20 +35,16 @@ def do_train(
     start_training_time = time.time()
     end = time.time()
 
-    iou_types = ("bbox",)
-    if cfg.MODEL.MASK_ON:
-        iou_types = iou_types + ("segm",)
-    if cfg.MODEL.KEYPOINT_ON:
-        iou_types = iou_types + ("keypoints",)
     dataset_names = cfg.DATASETS.TEST
 
-    for iteration, (images, targets, _) in enumerate(data_loader, start_iter):
+    for iteration, (images, targets) in enumerate(data_loader, start_iter):
         data_time = time.time() - end
         iteration = iteration + 1
         arguments["iteration"] = iteration
 
         images = images.to(device)
-        targets = [target.to(device) for target in targets]
+        for k, v in targets.items():
+            targets[k] = v.to(device)
 
         loss_dict = model(images, targets)
         losses = sum(loss for loss in loss_dict.values())
@@ -56,6 +52,7 @@ def do_train(
         meters.update(loss=losses, **loss_dict)
 
         optimizer.zero_grad()
+        losses.backward()
         optimizer.step()
         scheduler.step()
 
@@ -92,7 +89,7 @@ def do_train(
                 model,
                 # The method changes the segmentation mask format in a data loader,
                 # so every time a new data loader is created:
-                build_data_loader(cfg, is_train=False),
+                build_data_loader(cfg, is_train=False, is_for_period=True),
                 dataset_name="[Validation]",
                 device=cfg.MODEL.DEVICE,
                 output_folder=None,
@@ -100,9 +97,10 @@ def do_train(
             model.train()
             with torch.no_grad():
                 # Should be one image for each GPU:
-                for iteration_val, (images_val, targets_val, _) in enumerate(tqdm(data_loader_val)):
+                for iteration_val, (images_val, targets_val) in enumerate(tqdm(data_loader_val)):
                     images_val = images_val.to(device)
-                    targets_val = [target.to(device) for target in targets_val]
+                    for k, v in targets_val.items():
+                        targets_val[k] = v.to(device)
                     loss_dict = model(images_val, targets_val)
                     losses = sum(loss for loss in loss_dict.values())
                     meters_val.update(loss=losses, **loss_dict)

@@ -10,6 +10,7 @@ from engine.inference import inference
 from engine.modeling import build_model
 from engine.data import build_data_loader
 from engine.utils.logger import setup_logger
+from engine.utils.miscellaneous import mkdir
 from engine.utils.checkpoint import Checkpointer
 
 
@@ -56,7 +57,7 @@ def main():
     if cfg.OUTPUT_DIR:
         for idx, dataset_name in enumerate(dataset_names):
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference", dataset_name)
-            os.mkdir(output_folder)
+            mkdir(output_folder)
             output_folders[idx] = output_folder
     data_loaders_val = build_data_loader(cfg, is_train=False)
     for output_folder, dataset_name, data_loader_val in zip(output_folders, dataset_names, data_loaders_val):
@@ -64,11 +65,7 @@ def main():
             model,
             data_loader_val,
             dataset_name=dataset_name,
-            box_only=False if cfg.MODEL.RETINANET_ON else cfg.MODEL.RPN_ONLY,
-            bbox_aug=cfg.TEST.BBOX_AUG.ENABLED,
             device=cfg.MODEL.DEVICE,
-            expected_results=cfg.TEST.EXPECTED_RESULTS,
-            expected_results_sigma_tol=cfg.TEST.EXPECTED_RESULTS_SIGMA_TOL,
             output_folder=output_folder,
         )
 

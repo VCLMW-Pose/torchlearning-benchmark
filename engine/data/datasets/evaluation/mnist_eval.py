@@ -17,6 +17,7 @@ def do_mnist_evaluation(predictions, gts, output_folder):
     for k in predictions.keys():
         pred = predictions[k]
         gt = gts[k]
+        gt = gt["labels"]
 
         accuracy += torch.sum(pred == gt).numpy()
         denominator += pred.shape[0]

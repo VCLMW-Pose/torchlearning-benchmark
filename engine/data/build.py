@@ -75,10 +75,10 @@ def make_batch_data_sampler(
     return batch_sampler
 
 
-def build_data_loader(cfg, is_train=True, start_iter=0):
+def build_data_loader(cfg, is_train=True, start_iter=0, is_for_period=False):
     if is_train:
         images_per_batch = cfg.SOLVER.IMS_PER_BATCH
-        shuffle = cfg.SOLVER.SHUFFLE
+        shuffle = cfg.DATALOADER.SHUFFLE
         num_iters = cfg.SOLVER.MAX_ITER
     else:
         images_per_batch = cfg.TEST.IMS_PER_BATCH
@@ -99,16 +99,16 @@ def build_data_loader(cfg, is_train=True, start_iter=0):
         batch_sampler = make_batch_data_sampler(
             dataset, sampler, images_per_batch, num_iters, start_iter
         )
-        collator = None
+        # collator = None
         num_workers = cfg.DATALOADER.NUM_WORKERS
         data_loader = torch.utils.data.DataLoader(
             dataset,
             num_workers=num_workers,
             batch_sampler=batch_sampler,
-            collate_fn=collator,
+            # collate_fn=collator,
         )
         data_loaders.append(data_loader)
-    if is_train:
+    if is_train or is_for_period:
         # during training, a single (possibly concatenated) data_loader is returned
         assert len(data_loaders) == 1
         return data_loaders[0]

@@ -32,7 +32,7 @@ class MNIST(Dataset):
         # Read image paths
         self.img_names = os.listdir(os.path.join(self.root, "images"))
         self.img_names = sorted(self.img_names)
-        self.img_paths = [os.path.join(self.root, "/images/" + name) for name in self.img_names]
+        self.img_paths = [os.path.join(self.root, "images/" + name) for name in self.img_names]
 
         # Read annotation paths
         self.ann_names = os.listdir(self.ann_file)

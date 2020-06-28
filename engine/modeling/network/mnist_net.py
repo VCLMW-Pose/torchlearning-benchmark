@@ -40,7 +40,7 @@ class MNISTNet(nn.Module):
         if target:
             labels = target["labels"]
             loss = F.cross_entropy(logistic, labels)
-            return loss
+            return {"class_loss": loss}
 
         # Get classification prediction
         pred = logistic.data.max(1).indices
