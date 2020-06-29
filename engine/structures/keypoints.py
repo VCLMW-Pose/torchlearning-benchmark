@@ -105,6 +105,26 @@ class MWPoseKeypoints(Keypoints):
 MWPoseKeypoints.FLIP_INDS = _create_flip_indices(MWPoseKeypoints.NAMES, MWPoseKeypoints.FLIP_MAP)
 
 
+def mwpose_kp_connections(keypoints):
+    kp_line = [
+        [keypoints.index('nose'), keypoints.index('neck')],
+        [keypoints.index('rShoulder'), keypoints.index('rElbow')],
+        [keypoints.index('rElbow'), keypoints.index('rWrist')],
+        [keypoints.index('lShoulder'), keypoints.index('lElbow')],
+        [keypoints.index('lElbow'), keypoints.index('lWrist')],
+        [keypoints.index('rHip'), keypoints.index('rKnee')],
+        [keypoints.index('rKnee'), keypoints.index('rAnkle')],
+        [keypoints.index('lHip'), keypoints.index('lKnee')],
+        [keypoints.index('lKnee'), keypoints.index('lAnkle')],
+        [keypoints.index('rShoulder'), keypoints.index('lShoulder')],
+        [keypoints.index('rHip'), keypoints.index('lHip')],
+    ]
+    return kp_line
+
+
+MWPoseKeypoints.CONNECTIONS = mwpose_kp_connections(MWPoseKeypoints.NAMES)
+
+
 class PersonKeypoints(Keypoints):
     NAMES = [
         'nose',
@@ -163,9 +183,6 @@ def kp_connections(keypoints):
 
 
 PersonKeypoints.CONNECTIONS = kp_connections(PersonKeypoints.NAMES)
-
-
-def
 
 
 # TODO make this nicer, this is a direct translation from C2 (but removing the inner loop)

@@ -1,7 +1,7 @@
 # Copyright (c) 2020 MW-Pose Group, 2020
 from torch.utils.data import Dataset
 
-import engine.structures.keypoint as K
+import engine.structures.keypoints as K
 
 import numpy as np
 import json
@@ -62,7 +62,7 @@ class MWPose(Dataset):
         anno = json.load(anno)
 
         assert len(anno) == 1, 'Multi-person scenario not implemented.'
-        anno = anno[0]
+        anno = anno[0][self.names]
 
         # Key point ground truth
         keypoints = np.array(anno).astype(np.float)
