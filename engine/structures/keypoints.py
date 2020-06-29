@@ -25,7 +25,7 @@ class Keypoints(BaseStructure):
     def crop(self, box):
         raise NotImplementedError()
 
-    def resize(self, size, *args, **kwargs):
+    def resize(self, size):
         ratios = tuple(float(s) / float(s_orig) for s, s_orig in zip(size, self.size))
         ratio_w, ratio_h = ratios
         resized_data = self.data.clone()
@@ -53,6 +53,13 @@ class Keypoints(BaseStructure):
 
         self.data = flipped_data
         return self
+
+    def calibrate(self):
+        pass
+
+    def gen_heatmap(self):
+        # TODO: Generate heatmap with keypoints
+        return self.data
 
     def __getitem__(self, item):
         keypoints = self.data[item]

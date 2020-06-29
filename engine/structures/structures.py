@@ -74,3 +74,8 @@ class ImageTargetContainer(dict):
                 v.to(device)
 
         return self
+
+
+class MixedTargetContainer(ImageTargetContainer, RegistryTargetContainer):
+    def __init__(self):
+        pass

@@ -15,12 +15,17 @@ class DatasetCatalog(object):
         "mnist_test": {
             "img_dir": "mnist/test",
             "ann_file": "mnist/test/labels"
-        }
+        },
+        "mwpose_train": {
+            "root": "mwpose/",
+            "size": (360, 640),
+            "mode": "mwpose"
+        },
     }
 
     @staticmethod
     def get(name):
-        if "mnist" in  name:
+        if "mnist" in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
@@ -29,6 +34,18 @@ class DatasetCatalog(object):
             )
             return dict(
                 factory="MNIST",
+                args=args,
+            )
+        elif "mwpose" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                root=os.path.join(data_dir, attrs["img_dir"]),
+                size=attrs["size"],
+                mode=attrs["mode"]
+            )
+            return dict(
+                factory="MWPose",
                 args=args,
             )
         # elif "your dataset name" in name:

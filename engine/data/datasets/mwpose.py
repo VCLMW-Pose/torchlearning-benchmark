@@ -1,6 +1,7 @@
 # Copyright (c) 2020 MW-Pose Group, 2020
 from torch.utils.data import Dataset
 
+from engine.structures.structures import ImageTargetContainer as Container
 import engine.structures.keypoints as K
 
 import numpy as np
@@ -60,6 +61,7 @@ class MWPose(Dataset):
         rf_image = self._read_rf_image(self.sig_paths[idx])
         anno = open(self.ann_paths[idx], 'r')
         anno = json.load(anno)
+        target = Container()
 
         assert len(anno) == 1, 'Multi-person scenario not implemented.'
         anno = anno[0][self.names]
@@ -67,8 +69,18 @@ class MWPose(Dataset):
         # Key point ground truth
         keypoints = np.array(anno).astype(np.float)
         keypoints[..., 2] = 1
-
         keypoints = self._factory(keypoints, self.size)
+
+        # Heatmap ground truth for training, key points for evaluation
+        # if self.is_train:
+        #     heatmap = keypoints.gen_heatmap()
+        #     target["heatmap"] = heatmap
+        # else:
+        #     target["keypoints"] = keypoints
+        target["keypoints"] = keypoints
+
+        if self._transforms:
+            return self._transforms(rf_image, target)
 
     def __len__(self):
         return len(self.sig_paths)

@@ -8,6 +8,7 @@ import torch.utils.data
 from . import datasets as D
 from . import samplers
 from .transforms import build_transforms
+from .collate_batch import StructureCollator
 
 import engine.config.paths_catalog as paths_catalog
 
@@ -99,13 +100,13 @@ def build_data_loader(cfg, is_train=True, start_iter=0, is_for_period=False):
         batch_sampler = make_batch_data_sampler(
             dataset, sampler, images_per_batch, num_iters, start_iter
         )
-        # collator = None
+        collator = StructureCollator()
         num_workers = cfg.DATALOADER.NUM_WORKERS
         data_loader = torch.utils.data.DataLoader(
             dataset,
             num_workers=num_workers,
             batch_sampler=batch_sampler,
-            # collate_fn=collator,
+            collate_fn=collator,
         )
         data_loaders.append(data_loader)
     if is_train or is_for_period:
