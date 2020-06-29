@@ -6,5 +6,6 @@ class Heatmap(BaseStructure):
     def __init__(self, heatmap):
         super(Heatmap, self).__init__(heatmap)
 
-
+    def resize(self, size):
+        pass
 

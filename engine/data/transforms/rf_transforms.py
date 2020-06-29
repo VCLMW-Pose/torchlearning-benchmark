@@ -10,7 +10,11 @@ class RandomVerticalFlip3D(object):
 
 
 class CalibrateMWPose(object):
-    pass
+    def __init__(self):
+        pass
+
+    def __call__(self):
+        pass
 
 
 class Resize3D(object):
