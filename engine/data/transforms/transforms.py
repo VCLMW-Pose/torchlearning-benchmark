@@ -5,6 +5,14 @@ import torch
 import torchvision
 from torchvision.transforms import functional as F
 
+from .rf_transforms import (
+    RandomHorizontalFlip3D,
+    RandomVerticalFlip3D,
+    Pad3D,
+    CalibrateMWPose,
+    GenerateHMS,
+)
+
 
 class Compose(object):
     def __init__(self, transforms):

@@ -23,10 +23,12 @@ def build_transforms(cfg, is_train=True):
         if trans == "Resize":
             min_size = cfg.INPUT.MIN_SIZE_TRAIN if is_train else cfg.INPUT.MIN_SIZE_TEST
             max_size = cfg.INPUT.MAX_SIZE_TRAIN if is_train else cfg.INPUT.MAX_SIZE_TEST
-            transform += [factory(
-                min_size=min_size,
-                max_size=max_size
-            )]
+            transform += [
+                factory(
+                    min_size=min_size,
+                    max_size=max_size
+                )
+            ]
         elif trans == "Normalize":
             transform += [
                 factory(
@@ -65,6 +67,34 @@ def build_transforms(cfg, is_train=True):
         elif trans == "ToTensor":
             transform += [
                 factory()
+            ]
+        elif trans == "RandomHorizontalFlip3D":
+            flip_horizontal_prob = cfg.INPUT.HORIZONTAL_FLIP_PROB_TRAIN if is_train else 0.0
+            transform += [
+                factory(
+                    prob=flip_horizontal_prob,
+                )
+            ]
+        elif trans == "RandomVerticalFlip3D":
+            flip_vertical_prob = cfg.INPUT.VERTICAL_FLIP_PROB_TRAIN if is_train else 0.0
+            transform += [
+                factory(
+                    prob=flip_vertical_prob,
+                )
+            ]
+        elif trans == "Pad3D":
+            pad = cfg.INPUT.PAD_TRAIN if is_train else cfg.INPUT.PAD_TEST
+            transform += [
+                factory(
+                    pad=pad,
+                )
+            ]
+        elif trans == "GenerateHMS":
+            transform += [
+                factory(
+                    hms_size=cfg.INPUT.HMS_SIZE,
+                    sigma=cfg.INPUT.HMS_SIGMA,
+                )
             ]
 
     return T.Compose(transform)

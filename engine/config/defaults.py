@@ -73,6 +73,13 @@ _C.INPUT.HORIZONTAL_FLIP_PROB_TRAIN = 0.5
 # ---------------------------  RandomVerticalFlip  ----------------------------
 _C.INPUT.VERTICAL_FLIP_PROB_TRAIN = 0.0
 
+# -----------------------------------  Pad  -----------------------------------
+_C.INPUT.PAD_TRAIN = ()
+_C.INPUT.PAD_TEST = ()
+
+# -------------------------------  GenerateHMS  -------------------------------
+_C.INPUT.HMS_SIZE = ()
+_C.INPUT.HMS_SIGMA = 2
 
 # -----------------------------------------------------------------------------
 # Dataset
