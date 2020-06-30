@@ -44,26 +44,29 @@ class RegistryTargetContainer(dict):
 
 
 class ImageTargetContainer(dict):
+    """
+
+    """
     def __init__(self):
         super(ImageTargetContainer, self).__init__()
 
     def resize(self, size, *args, **kwargs):
         for k, v in self.items():
-            if not isinstance(v, torch.Tensor):
+            if isinstance(v, BaseStructure):
                 v.resize(size, *args, **kwargs)
 
         return self
 
     def transpose(self, method):
         for k, v in self.items():
-            if not isinstance(v, torch.Tensor):
+            if isinstance(v, BaseStructure):
                 v.transpose(method)
 
         return self
 
     def crop(self, box):
         for k, v in self.items():
-            if not isinstance(v, torch.Tensor):
+            if isinstance(v, BaseStructure):
                 v.crop(box)
 
         return self

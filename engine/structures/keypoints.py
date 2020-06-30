@@ -1,6 +1,8 @@
+import numpy as np
 import torch
 
 from .structures import BaseStructure
+from .heatmap import Heatmap
 
 # transpose
 FLIP_LEFT_RIGHT = 0
@@ -32,6 +34,7 @@ class Keypoints(BaseStructure):
         resized_data[..., 0] *= ratio_w
         resized_data[..., 1] *= ratio_h
 
+        self.size = size
         self.data = resized_data
         return self
 
@@ -57,9 +60,48 @@ class Keypoints(BaseStructure):
     def calibrate(self):
         pass
 
-    def gen_heatmap(self):
+    def gen_heatmap(self, hms_size, sigma):
         # TODO: Generate heatmap with keypoints
-        return self.data
+        keypoints = self.data
+        num_joints = keypoints.shape[0]
+        target_weight = np.ones((num_joints, 1), dtype=np.float32)
+        target_weight[:, 0] = keypoints[:, 2]
+        target = np.zeros((num_joints, hms_size[0], hms_size[1]),
+                          dtype=np.float32)
+        tmp_size = sigma * 3
+        feat_stride = np.array(self.size) / np.array(hms_size)
+
+        for i in range(num_joints):
+            mu_x = int(keypoints[i, 0] / feat_stride[0] + 0.5)
+            mu_y = int(keypoints[i, 1] / feat_stride[1] + 0.5)
+            # check if any part of the gaussian is in-bounds
+            ul = [int(mu_x - tmp_size), int(mu_y - tmp_size)]
+            br = [int(mu_x + tmp_size + 1), int(mu_y + tmp_size + 1)]
+            if ul[0] >= hms_size[1] or ul[1] >= hms_size[0] or br[0] < 0 or br[1] < 0:
+                # return image as is
+                target_weight[i] = 0
+                continue
+
+            # generate gaussian
+            size = 2 * tmp_size + 1
+            x = np.arange(0, size, 1, np.float32)
+            y = x[:, np.newaxis]
+            x0 = y0 = size // 2
+            # the gaussian is not normalized, we want the center value to be equal to 1
+            g = np.exp(-((x - x0) ** 2 + (y - y0) ** 2) / (2 * (sigma ** 2)))
+
+            # usable gaussian range
+            g_x = max(0, -ul[0]), min(br[0], hms_size[1]) - ul[0]
+            g_y = max(0, -ul[1]), min(br[1], hms_size[0]) - ul[1]
+            # image range
+            img_x = max(0, ul[0]), min(br[0], hms_size[1])
+            img_y = max(0, ul[1]), min(br[1], hms_size[0])
+
+            v = target_weight[i]
+            if v > 0.5:
+                target[i, img_y[0]:img_y[1], img_x[0]:img_x[1]] = g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
+
+        return target, target_weight
 
     def __getitem__(self, item):
         keypoints = self.data[item]
