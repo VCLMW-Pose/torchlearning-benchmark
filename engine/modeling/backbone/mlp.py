@@ -40,3 +40,33 @@ class SimpleMLP(nn.Module):
         input = input.view(input.size(0), -1)
         assert input.size(1) == self.input_dims
         return self.models(input)
+
+
+@registry.BACKBONE.register("MLP")
+class MLP(nn.Module):
+    def __init__(self, in_channel, n_hiddens, out_channel, p_dropout=0.2):
+        """
+        :param in_channel:
+        :param n_hiddens:
+        :param out_channel:
+        :param p_dropout:
+        """
+        super(MLP, self).__init__()
+        layers = OrderedDict()
+
+        if isinstance(n_hiddens, int):
+            n_hiddens = [n_hiddens]
+        else:
+            n_hiddens = list(n_hiddens)
+        for i, n_hidden in enumerate(n_hiddens):
+            layers["fc{}".format(i + 1)] = nn.Linear(in_channel, n_hidden)
+            layers["relu{}".format(i + 1)] = nn.ReLU()
+            layers["drop{}".format(i + 1)] = nn.Dropout(p_dropout)
+            in_channel = n_hidden
+        layers["out"] = nn.Linear(in_channel, out_channel)
+
+        self.layers = nn.Sequential(layers)
+
+    def forward(self, x):
+        x = x.view(x.size(0), -1)
+        return self.layers(x)

@@ -42,8 +42,8 @@ class DUCnx(nn.Module):
 
         self.layers = nn.Sequential(*layers)
 
-    def forward(self, input):
-        return self.layers(input)
+    def forward(self, x):
+        return self.layers(x)
 
     @staticmethod
     def _make_layers(in_channel,
