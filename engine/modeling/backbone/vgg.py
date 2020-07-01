@@ -20,6 +20,9 @@ class VGG(nn.Module):
             if stage == 'M':
                 layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
                 continue
+            elif stage == "a":
+                layers.append(nn.AvgPool2d(kernel_size=2, stride=2))
+                continue
 
             layers.append(nn.Conv2d(in_channel, stage, kernel_size=3, padding=1))
             if batch_norm:
