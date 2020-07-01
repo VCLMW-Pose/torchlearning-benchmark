@@ -10,7 +10,7 @@ cfg = {
 }
 
 
-@registry.BACKBONE.Registry("VGG")
+@registry.BACKBONE.register("VGG")
 class VGG(nn.Module):
 
     def __init__(self, in_channel, stages, batch_norm):
