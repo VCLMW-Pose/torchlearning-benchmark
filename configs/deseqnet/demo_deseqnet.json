@@ -5,7 +5,8 @@
         "in_channel": 60,
         "stages": [64, 64, "M", 128, 128, "M", 256, 256, 256, 256, "M", 512, 512, 512, 512, "M", 512, 512, 512, 512, "M"],
         "norm": "GroupNorm",
-        "norm_options": {"groups": 20}
+        "norm_options": {"groups": 20},
+
     },
     "linear": {
         "backbone": "MLP",

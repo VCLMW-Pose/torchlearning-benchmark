@@ -70,6 +70,14 @@ class CalibrateMWPose(object):
         pass
 
 
+class KeypointsResize(object):
+    def __init__(self, size):
+        self._size = size
+
+    def __call__(self, image, target):
+        pass
+
+
 class GenerateHMS(object):
     def __init__(self, hms_size, sigma, pop_kp=False):
         self._hms_size = hms_size
