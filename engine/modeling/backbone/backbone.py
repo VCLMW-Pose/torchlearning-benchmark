@@ -1,5 +1,8 @@
 # Copyright (c) 2020 MW-Pose Group, 2020
 from engine.modeling import registry
+
+import engine.modeling.backbone.vgg
+import engine.modeling.backbone.duc
 import engine.modeling.backbone.mlp
 
 

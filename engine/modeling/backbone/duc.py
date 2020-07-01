@@ -1,5 +1,6 @@
 import torch.nn as nn
 from engine.modeling import registry
+from engine.modeling.layers import build_norm
 
 
 @registry.BACKBONE.register("DUC")
@@ -10,19 +11,21 @@ class DUC(nn.Module):
     '''
 
     def __init__(self, inplanes, planes,
-                 upscale_factor=2, norm_layer=nn.BatchNorm2d):
+                 upscale_factor=2, norm=None, **kwargs):
         super(DUC, self).__init__()
-        self.conv = nn.Conv2d(
+        conv = nn.Conv2d(
             inplanes, planes, kernel_size=3, padding=1, bias=False)
-        self.bn = norm_layer(planes, momentum=0.1)
-        self.relu = nn.ReLU(inplace=True)
-        self.pixel_shuffle = nn.PixelShuffle(upscale_factor)
+        bn = build_norm(in_channel=planes,
+                        norm_layer=norm,
+                        **kwargs)
+        relu = nn.ReLU(inplace=True)
+        pixel_shuffle = nn.PixelShuffle(upscale_factor)
+
+        layers = [conv, bn, relu, pixel_shuffle]
+        self.layers = nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.conv(x)
-        x = self.bn(x)
-        x = self.relu(x)
-        x = self.pixel_shuffle(x)
+        x = self.layers(x)
         return x
 
 
