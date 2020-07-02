@@ -39,12 +39,13 @@ class MWPose(Dataset):
                           .format(os.path.join(self.root, txt)))
 
         # Yield the paths of RF images and annotations
-        self.sig_paths = [os.path.join(root, "signals/" + name) for name in self.sig_names]
-        self.ann_paths = [os.path.join(root, "labels/" + name + ".txt") for name in self.sig_names]
+        self.sig_paths = [os.path.join(root, "signals/" + name.strip()) for name in self.sig_names]
+        self.ann_paths = [os.path.join(root, "labels/" + name.strip() + ".json") for name in self.sig_names]
 
         # Read keypoints names
         with open(os.path.join(self.root, "keypoint.names"), 'r') as f:
             self.names = f.readlines()
+            self.names = [name.strip() for name in self.names]
 
         # Key point factory
         if mode == 'mwpose':
@@ -64,7 +65,8 @@ class MWPose(Dataset):
         target = Container()
 
         assert len(anno) == 1, 'Multi-person scenario not implemented.'
-        anno = anno[0][self.names]
+        anno = anno[0]
+        anno = [anno[name][:] for name in self.names]
 
         # Key point ground truth
         keypoints = np.array(anno).astype(np.float)
@@ -93,12 +95,14 @@ class MWPose(Dataset):
 
         # Dimensions
         try:
-            _x, _y, _z = data[0:2]
+            _x, _y, _z = data[0:3]
         except Exception:
             raise IOError("RF Image does not exist, excepetion occurred at directory: {}"
                   .format(dir))
 
         # Resize the signal as size_z x size_x x size_y
         rf_image = np.array(data[3:]).reshape((_x, _y, _z))
+        rf_image = np.fliplr(rf_image).astype(np.float32) / 255.
+        rf_image = rf_image.copy()
 
         return rf_image

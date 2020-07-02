@@ -21,6 +21,11 @@ class DatasetCatalog(object):
             "size": (360, 640),
             "mode": "mwpose"
         },
+        "mwpose_test": {
+            "root": "mwpose/",
+            "size": (360, 640),
+            "mode": "mwpose"
+        },
     }
 
     @staticmethod
@@ -40,7 +45,7 @@ class DatasetCatalog(object):
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
-                root=os.path.join(data_dir, attrs["img_dir"]),
+                root=os.path.join(data_dir, attrs["root"]),
                 size=attrs["size"],
                 mode=attrs["mode"]
             )

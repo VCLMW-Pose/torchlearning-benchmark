@@ -15,7 +15,7 @@ from engine.modeling.layers import build_norm
 @registry.BACKBONE.register("VGG")
 class VGG(nn.Module):
 
-    def __init__(self, in_channel, stages, norm, **kwargs):
+    def __init__(self, in_channels, stages, norm, **kwargs):
         super().__init__()
         layers = list()
         for stage in stages:
@@ -31,7 +31,7 @@ class VGG(nn.Module):
                 continue
 
             layers.append(nn.Conv2d(
-                in_channel,
+                in_channels,
                 stage,
                 kernel_size=3,
                 padding=1))
@@ -41,7 +41,7 @@ class VGG(nn.Module):
                     norm_layer=norm,
                     **kwargs))
             layers.append(nn.ReLU(inplace=True))
-            in_channel = stage
+            in_channels = stage
 
         self.layers = nn.Sequential(*layers)
 

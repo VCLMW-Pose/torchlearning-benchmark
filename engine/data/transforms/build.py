@@ -90,6 +90,7 @@ def build_transforms(cfg, is_train=True):
                 )
             ]
         elif trans == "GenerateHMS":
+            # if is_train:
             transform += [
                 factory(
                     hms_size=cfg.INPUT.HMS_SIZE,

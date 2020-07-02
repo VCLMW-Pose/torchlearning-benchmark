@@ -95,7 +95,7 @@ def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
     parser.add_argument(
         "--config-file",
-        default="../configs/simple_mlp_mnist.yaml",
+        default="../configs/deseqnet_vgg19_mlp_duc3x.yaml",
         metavar="FILE",
         help="path to config file",
         type=str,

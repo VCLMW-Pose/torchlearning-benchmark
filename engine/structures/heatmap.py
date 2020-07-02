@@ -124,17 +124,17 @@ def heatmap_to_coord_simple(hms, bbox):
                              hm[py + 1][px] - hm[py - 1][px]))
             coords[p] += np.sign(diff) * .25
 
-    preds = np.zeros_like(coords)
+    # preds = np.zeros_like(coords)
 
-    # transform bbox to scale
-    xmin, ymin, xmax, ymax = bbox
-    w = xmax - xmin
-    h = ymax - ymin
-    center = np.array([xmin + w * 0.5, ymin + h * 0.5])
-    scale = np.array([w, h])
-    # Transform back
-    for i in range(coords.shape[0]):
-        preds[i] = transform_preds(coords[i], center, scale,
-                                   [hm_w, hm_h])
+    # # transform bbox to scale
+    # xmin, ymin, xmax, ymax = bbox
+    # w = xmax - xmin
+    # h = ymax - ymin
+    # center = np.array([xmin + w * 0.5, ymin + h * 0.5])
+    # scale = np.array([w, h])
+    # # Transform back
+    # for i in range(coords.shape[0]):
+    #     preds[i] = transform_preds(coords[i], center, scale,
+    #                                [hm_w, hm_h])
 
-    return preds, maxvals
+    return coords, maxvals

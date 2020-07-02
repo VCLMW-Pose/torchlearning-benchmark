@@ -1,6 +1,7 @@
 from engine.data import datasets
 
 from .mnist_eval import do_mnist_evaluation
+from .mwpose_eval import do_mwpose_evaluation
 
 
 def evaluate(dataset, predictions, gts, output_folder):
@@ -19,6 +20,8 @@ def evaluate(dataset, predictions, gts, output_folder):
     )
     if isinstance(dataset, datasets.MNIST):
         return do_mnist_evaluation(**args)
+    elif isinstance(dataset, datasets.MWPose):
+        return do_mwpose_evaluation(dataset=dataset, **args)
     else:
         dataset_name = dataset.__class__.__name__
         raise NotImplementedError("Unsupported dataset type {}.".format(dataset_name))

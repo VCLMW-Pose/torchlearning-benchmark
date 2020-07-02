@@ -19,7 +19,7 @@ class Keypoints(BaseStructure):
         # in my version this would consistently return a CPU tensor
         num_keypoints = self.data.shape[0]
         if num_keypoints:
-            self.data = self.data.view(num_keypoints, -1, 3)
+            self.data = self.data.view(num_keypoints, 3)
 
         self.size = size
         self.mode = mode
@@ -101,7 +101,7 @@ class Keypoints(BaseStructure):
             if v > 0.5:
                 target[i, img_y[0]:img_y[1], img_x[0]:img_x[1]] = g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
 
-        return target, target_weight
+        return target, np.expand_dims(target_weight, -1)
 
     def __getitem__(self, item):
         keypoints = self.data[item]

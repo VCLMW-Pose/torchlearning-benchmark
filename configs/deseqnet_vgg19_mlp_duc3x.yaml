@@ -1,0 +1,54 @@
+MODEL:
+  DEVICE: "cuda"
+  META_ARCH: "DeSeqNet"
+  CONFIG: "../configs/deseqnet/demo_deseqnet.json"
+  WEIGHT: ""
+
+INPUT:
+#  TRANSFORMS: ("ToTensor", "Pad3D", "Normalize", "GenerateHMS")
+  TRANSFORMS: ("ToTensor", "Pad3D", "GenerateHMS")
+  # Pad3D
+  PAD_TRAIN: (9, 9, 10, 9)
+  PAD_TEST: (9, 9, 10, 9)
+
+  # Normalize
+#  PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  # GenerateHMS
+  HMS_SIZE: (72, 128)
+  HMS_SIGMA: 4
+  HMS_POP_KP: True
+
+DATASETS:
+  TRAIN: ("mwpose_train",)
+  TEST: ("mwpose_test",)
+
+DATALOADER:
+  NUM_WORKERS: 1
+  SHUFFLE: True
+
+SOLVER:
+  MAX_ITER: 40000
+
+  OPTIMIZER: "SGD"
+  BASE_LR: 0.01
+  BIAS_LR_FACTOR: 2
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0
+  MOMENTUM: 0.9
+
+  SCHEDULER: "WarmupMultiStep"
+  GAMMA: 0.1
+  STEPS: (10000, 20000,)
+  WARMUP_FACTOR: 0.333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: "linear"
+
+  CHECKPOINT_PERIOD: 2500
+  TEST_PERIOD: 500
+  IMS_PER_BATCH: 8
+
+TEST:
+  IMS_PER_BATCH: 8
+
+OUTPUT_DIR: "../models/mwpose_7.2/"
+SAVE_TO_DISK: True

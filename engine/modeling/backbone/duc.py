@@ -32,16 +32,17 @@ class DUC(nn.Module):
 @registry.BACKBONE.register("DUCnx")
 class DUCnx(nn.Module):
     def __init__(self, in_channels, stages, upscale_factor=2,
-                 norm_layer=None):
+                 norm=None, **kwargs):
         super(DUCnx, self).__init__()
         layers = list()
         for stage in stages:
             layers.append(self._make_layers(in_channel=in_channels,
                                             out_channel=stage,
                                             upscale_factor=upscale_factor,
-                                            norm_layer=norm_layer)
+                                            norm=norm,
+                                            **kwargs)
                           )
-            in_channels = stage
+            in_channels = stage // (upscale_factor ** 2)
 
         self.layers = nn.Sequential(*layers)
 
@@ -52,9 +53,11 @@ class DUCnx(nn.Module):
     def _make_layers(in_channel,
                      out_channel,
                      upscale_factor=2,
-                     norm_layer=None):
+                     norm=None,
+                     **kwargs):
 
         return DUC(in_channel,
                    out_channel,
                    upscale_factor=upscale_factor,
-                   norm_layer=norm_layer)
+                   norm=norm,
+                   **kwargs)
