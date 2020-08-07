@@ -1,24 +1,26 @@
 MODEL:
   DEVICE: "cuda"
-  META_ARCH: "MNISTNet"
-  CONFIG: "../configs/mnist_net/mnist_net.json"
+  META_ARCH: "DeSeqNet"
+  CONFIG: "../configs/deseqnet/deseqnet_vgg16_duc3x.json"
   WEIGHT: ""
 
 INPUT:
-  TRANSFORMS: ("Resize", "ToTensor", "Normalize")
-  # Resize
-  MAX_SIZE_TRAIN: 28
-  MIN_SIZE_TRAIN: 28
-  MAX_SIZE_TEST: 28
-  MIN_SIZE_TEST: 28
+#  TRANSFORMS: ("ToTensor", "Pad3D", "Normalize", "GenerateHMS")
+  TRANSFORMS: ("ToTensor", "Pad3D", "GenerateHMS")
+  # Pad3D
+  PAD_TRAIN: (9, 9, 10, 9)
+  PAD_TEST: (9, 9, 10, 9)
 
   # Normalize
-  PIXEL_MEAN: [0.1307]
-  PIXEL_STD: [0.3081]
+#  PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  # GenerateHMS
+  HMS_SIZE: (72, 128)
+  HMS_SIGMA: 4
+  HMS_POP_KP: True
 
 DATASETS:
-  TRAIN: ("mnist_train",)
-  TEST: ("mnist_test",)
+  TRAIN: ("mwpose_train",)
+  TEST: ("mwpose_test",)
 
 DATALOADER:
   NUM_WORKERS: 1
@@ -48,5 +50,5 @@ SOLVER:
 TEST:
   IMS_PER_BATCH: 8
 
-OUTPUT_DIR: "../models/mnist_7.3/"
+OUTPUT_DIR: "../models/mwpose_vgg_16_8.7/"
 SAVE_TO_DISK: True
