@@ -93,6 +93,7 @@ def do_train(
                 dataset_name="[Validation]",
                 device=cfg.MODEL.DEVICE,
                 output_folder=None,
+                # output_folder="../models/mwpose_vgg_16_8.7/inference/mwpose_train"
             )
             model.train()
             with torch.no_grad():

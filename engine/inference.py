@@ -7,6 +7,7 @@ import torch
 from tqdm import tqdm
 
 from engine.data.datasets.evaluation import evaluate
+from engine.data.datasets.save import torchlearning_save
 from engine.utils.timer import Timer, get_time_str
 
 
@@ -73,7 +74,9 @@ def inference(
     )
 
     if output_folder:
-        torch.save(predictions, os.path.join(output_folder, "predictions.pth"))
+        torchlearning_save(dataset=dataset,
+                           predictions=predictions,
+                           output_folder=output_folder)
 
     return evaluate(dataset=dataset,
                     predictions=predictions,

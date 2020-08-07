@@ -63,7 +63,7 @@ class DeSeqNet(nn.Module):
         feat_vector = image.view(image.shape[0], -1)
         feat_vector = self.linear(feat_vector)
 
-        hms = feat_vector.view((feat_vector.shape[0], -1, self.hms_size[0], self.hms_size[1]))
+        hms = feat_vector.view((feat_vector.shape[0], -1, self.hms_size[1], self.hms_size[0]))
         hms = self.decoder(hms)
         hms = self.out(hms)
 

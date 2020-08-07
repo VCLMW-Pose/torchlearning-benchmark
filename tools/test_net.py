@@ -18,14 +18,14 @@ def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Inference")
     parser.add_argument(
         "--config-file",
-        default="/private/home/fmassa/github/detectron.pytorch_v2/configs/e2e_faster_rcnn_R_50_C4_1x_caffe2.yaml",
+        default="../configs/deseqnet_vgg19_mlp_duc3x.yaml",
         metavar="FILE",
         help="path to config file",
     )
     parser.add_argument(
         "--ckpt",
         help="The path to the checkpoint for test, default is the latest checkpoint.",
-        default=None,
+        default="../models/mwpose_7.2_vgg19/model_0015000.pth",
     )
     parser.add_argument(
         "opts",
@@ -41,14 +41,14 @@ def main():
     cfg.freeze()
 
     save_dir = ""
-    logger = setup_logger("maskrcnn_benchmark", save_dir)
+    logger = setup_logger("torchlearning-benchmark", save_dir)
     logger.info(cfg)
 
     model = build_model(cfg)
     model.to(cfg.MODEL.DEVICE)
 
     output_dir = cfg.OUTPUT_DIR
-    checkpointer = Checkpointer(cfg, model, save_dir=output_dir)
+    checkpointer = Checkpointer(model, save_dir=output_dir)
     ckpt = cfg.MODEL.WEIGHT if args.ckpt is None else args.ckpt
     _ = checkpointer.load(ckpt, use_latest=args.ckpt is None)
 
@@ -60,6 +60,7 @@ def main():
             mkdir(output_folder)
             output_folders[idx] = output_folder
     data_loaders_val = build_data_loader(cfg, is_train=False)
+    # data_loaders_val = build_data_loader(cfg, is_train=True)
     for output_folder, dataset_name, data_loader_val in zip(output_folders, dataset_names, data_loaders_val):
         inference(
             model,

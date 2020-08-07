@@ -20,7 +20,8 @@ INPUT:
 
 DATASETS:
   TRAIN: ("mwpose_train",)
-  TEST: ("mwpose_test",)
+#  TEST: ("mwpose_test",)
+  TEST: ("mwpose_train",)
 
 DATALOADER:
   NUM_WORKERS: 1

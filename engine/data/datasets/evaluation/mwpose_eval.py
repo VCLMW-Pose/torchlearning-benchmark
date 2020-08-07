@@ -16,7 +16,7 @@ def do_mwpose_evaluation(dataset, predictions, gts, output_folder):
 
     for idx, (k, dt) in enumerate(predictions.items()):
         gt = gts[k]
-        gt = gt["keypoints"]
+        gt = gt["keypoints"] / 5.0
         dt = np.array(dt)
         gt = np.array(gt)
 

@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import cv2
 
 from .structures import BaseStructure
 from .heatmap import Heatmap
@@ -66,7 +67,7 @@ class Keypoints(BaseStructure):
         num_joints = keypoints.shape[0]
         target_weight = np.ones((num_joints, 1), dtype=np.float32)
         target_weight[:, 0] = keypoints[:, 2]
-        target = np.zeros((num_joints, hms_size[0], hms_size[1]),
+        target = np.zeros((num_joints, hms_size[1], hms_size[0]),
                           dtype=np.float32)
         tmp_size = sigma * 3
         feat_stride = np.array(self.size) / np.array(hms_size)
@@ -77,7 +78,7 @@ class Keypoints(BaseStructure):
             # check if any part of the gaussian is in-bounds
             ul = [int(mu_x - tmp_size), int(mu_y - tmp_size)]
             br = [int(mu_x + tmp_size + 1), int(mu_y + tmp_size + 1)]
-            if ul[0] >= hms_size[1] or ul[1] >= hms_size[0] or br[0] < 0 or br[1] < 0:
+            if ul[0] >= hms_size[0] or ul[1] >= hms_size[1] or br[0] < 0 or br[1] < 0:
                 # return image as is
                 target_weight[i] = 0
                 continue
@@ -91,11 +92,11 @@ class Keypoints(BaseStructure):
             g = np.exp(-((x - x0) ** 2 + (y - y0) ** 2) / (2 * (sigma ** 2)))
 
             # usable gaussian range
-            g_x = max(0, -ul[0]), min(br[0], hms_size[1]) - ul[0]
-            g_y = max(0, -ul[1]), min(br[1], hms_size[0]) - ul[1]
+            g_x = max(0, -ul[0]), min(br[0], hms_size[0]) - ul[0]
+            g_y = max(0, -ul[1]), min(br[1], hms_size[1]) - ul[1]
             # image range
-            img_x = max(0, ul[0]), min(br[0], hms_size[1])
-            img_y = max(0, ul[1]), min(br[1], hms_size[0])
+            img_x = max(0, ul[0]), min(br[0], hms_size[0])
+            img_y = max(0, ul[1]), min(br[1], hms_size[1])
 
             v = target_weight[i]
             if v > 0.5:
@@ -113,6 +114,57 @@ class Keypoints(BaseStructure):
         s += 'image_width={}, '.format(self.size[0])
         s += 'image_height={})'.format(self.size[1])
         return s
+
+    def drawpose(self, img=None):
+        if not img:
+            img = np.zeros((5 * self.size[1], 5 * self.size[0], 3), dtype=np.uint8)
+
+        thick = 2
+        jointscoor = {}
+        if isinstance(self.data, np.ndarray) or isinstance(self.data, torch.Tensor):
+            for i in range(len(self.NAMES)):
+                jointscoor[self.NAMES[i]] = (int(5 * self.data[i][0]), int(5 * self.data[i][1]))
+        else:
+            print("Please check argument type!")
+            return
+        if jointscoor['nose'][0] != -1 and jointscoor['neck'][0] != -1:
+            img = cv2.line(img, jointscoor['nose'], jointscoor['neck'], (181, 102, 60), thickness=thick)
+        if jointscoor['neck'][0] != -1 and jointscoor['rShoulder'][0] != -1:
+            img = cv2.line(img, jointscoor['neck'], jointscoor['rShoulder'], (250, 203, 91), thickness=thick)
+        if jointscoor['rShoulder'][0] != -1 and jointscoor['rElbow'][0] != -1:
+            img = cv2.line(img, jointscoor['rShoulder'], jointscoor['rElbow'], (35, 198, 77), thickness=thick)
+        if jointscoor['rElbow'][0] != -1 and jointscoor['rWrist'][0] != -1:
+            img = cv2.line(img, jointscoor['rElbow'], jointscoor['rWrist'], (35, 98, 177), thickness=thick)
+        if jointscoor['neck'][0] != -1 and jointscoor['lShoulder'][0] != -1:
+            img = cv2.line(img, jointscoor['neck'], jointscoor['lShoulder'], (66, 218, 128), thickness=thick)
+        if jointscoor['lShoulder'][0] != -1 and jointscoor['lElbow'][0] != -1:
+            img = cv2.line(img, jointscoor['lShoulder'], jointscoor['lElbow'], (62, 121, 58), thickness=thick)
+        if jointscoor['lElbow'][0] != -1 and jointscoor['lWrist'][0] != -1:
+            img = cv2.line(img, jointscoor['lElbow'], jointscoor['lWrist'], (23, 25, 118), thickness=thick)
+        if jointscoor['neck'][0] != -1 and jointscoor['rHip'][0] != -1:
+            img = cv2.line(img, jointscoor['neck'], jointscoor['rHip'], (152, 59, 98), thickness=thick)
+        if jointscoor['rHip'][0] != -1 and jointscoor['rKnee'][0] != -1:
+            img = cv2.line(img, jointscoor['rHip'], jointscoor['rKnee'], (94, 160, 66), thickness=thick)
+        if jointscoor['rKnee'][0] != -1 and jointscoor['rAnkle'][0] != -1:
+            img = cv2.line(img, jointscoor['rKnee'], jointscoor['rAnkle'], (44, 159, 96), thickness=thick)
+        if jointscoor['neck'][0] != -1 and jointscoor['lHip'][0] != -1:
+            img = cv2.line(img, jointscoor['neck'], jointscoor['lHip'], (51, 135, 239), thickness=thick)
+        if jointscoor['lHip'][0] != -1 and jointscoor['lKnee'][0] != -1:
+            img = cv2.line(img, jointscoor['lHip'], jointscoor['lKnee'], (75, 58, 217), thickness=thick)
+        if jointscoor['lKnee'][0] != -1 and jointscoor['lAnkle'][0] != -1:
+            img = cv2.line(img, jointscoor['lKnee'], jointscoor['lAnkle'], (244, 59, 166), thickness=thick)
+        # if jointscoor['nose'][0] != -1 and jointscoor['rEye'][0] != -1:
+        #    img = cv2.line(img, jointscoor['nose'], jointscoor['rEye'], (49, 56, 218), thickness=thick)
+        # if jointscoor['rEye'][0] != -1 and jointscoor['rEar'][0] != -1:
+        #    img = cv2.line(img, jointscoor['rEye'], jointscoor['rEar'], (23, 25, 118), thickness=thick)
+        # if jointscoor['nose'][0] != -1 and jointscoor['lEye'][0] != -1:
+        #    img = cv2.line(img, jointscoor['nose'], jointscoor['lEye'], (130, 35, 158), thickness=thick)
+        # if jointscoor['lEye'][0] != -1 and jointscoor['lEar'][0] != -1:
+        #    img = cv2.line(img, jointscoor['lEye'], jointscoor['lEar'], (53, 200, 18), thickness=thick)
+        for joint in self.NAMES:
+            if jointscoor[joint] != (-1, -1):
+                img = cv2.circle(img, jointscoor[joint], 3, (68, 147, 200), -1)
+        return img
 
 
 def _create_flip_indices(names, flip_map):

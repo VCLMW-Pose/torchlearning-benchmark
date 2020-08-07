@@ -4,8 +4,10 @@ from engine.structures.heatmap import HeatmapMask
 from engine.structures.heatmap import Heatmap
 
 import torchvision.transforms.functional
+import numpy as np
 import random
 import torch
+import cv2
 
 
 def _is_tensor_a_torch_image(input):
@@ -91,6 +93,19 @@ class GenerateHMS(object):
         hms, keypoints_weight = target["keypoints"].gen_heatmap(self._hms_size, self._sigma)
         # target["hms"] = Heatmap(hms)
         # target["hms_mask"] = HeatmapMask(keypoints_weight)
+
+        # For Testing
+        # sum_hms = np.zeros((hms.shape[1], hms.shape[2]))
+        # n = hms.shape[0]
+        # for i in range(n):
+        #     sum_hms += hms[i, ::]
+        #
+        # sum_hms /= np.max(sum_hms)
+        # sum_hms *= 255.
+        # sum_hms = sum_hms.astype(np.uint8)
+        # cv2.imshow("test", sum_hms)
+        # cv2.waitKey(5000)
+
         target["hms"] = hms
         target["hms_mask"] = keypoints_weight
 
