@@ -20,18 +20,18 @@ INPUT:
 
 DATASETS:
   TRAIN: ("mwpose_train",)
-#  TEST: ("mwpose_test",)
-  TEST: ("mwpose_train",)
+  TEST: ("mwpose_test",)
+#  TEST: ("mwpose_throughwall",)
 
 DATALOADER:
   NUM_WORKERS: 1
   SHUFFLE: True
 
 SOLVER:
-  MAX_ITER: 40000
+  MAX_ITER: 160000
 
   OPTIMIZER: "SGD"
-  BASE_LR: 0.01
+  BASE_LR: 0.1
   BIAS_LR_FACTOR: 2
   WEIGHT_DECAY: 0.0005
   WEIGHT_DECAY_BIAS: 0

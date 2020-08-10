@@ -26,6 +26,11 @@ class DatasetCatalog(object):
             "size": (360, 640),
             "mode": "mwpose"
         },
+        "mwpose_throughwall": {
+            "root": "mwpose_throughwall/",
+            "size": (360, 640),
+            "mode": "mwpose"
+        }
     }
 
     @staticmethod

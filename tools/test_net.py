@@ -18,14 +18,14 @@ def main():
     parser = argparse.ArgumentParser(description="PyTorch Object Detection Inference")
     parser.add_argument(
         "--config-file",
-        default="../configs/deseqnet_vgg19_mlp_duc3x.yaml",
+        default="../configs/deseqnet_vgg16_mlp_duc3x.yaml",
         metavar="FILE",
         help="path to config file",
     )
     parser.add_argument(
         "--ckpt",
         help="The path to the checkpoint for test, default is the latest checkpoint.",
-        default="../models/mwpose_7.2_vgg19/model_0015000.pth",
+        default="../models/mwpose_vgg_16_8.7/model_0080000.pth",
     )
     parser.add_argument(
         "opts",

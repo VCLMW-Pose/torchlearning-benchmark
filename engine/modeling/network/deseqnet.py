@@ -72,7 +72,7 @@ class DeSeqNet(nn.Module):
             hms_gt = target["hms"]
             hms_mask = target["hms_mask"]
 
-            losses["hms_loss"] = 0.5 * F.mse_loss(hms.mul(hms_mask), hms_gt.mul(hms_mask))
+            losses["hms_loss"] = 20 * F.mse_loss(hms.mul(hms_mask), hms_gt.mul(hms_mask))
             return losses
 
         hms = hms.to(torch.device("cpu")).numpy()
