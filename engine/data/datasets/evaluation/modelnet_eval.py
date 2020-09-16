@@ -22,7 +22,6 @@ def do_modelnet_evaluation(predictions, gts, output_folder):
         pred = predictions[k]
         gt = gts[k]
 
-
         # gt = gt["labels"]
 
         accuracy += torch.sum(pred == gt).numpy()

@@ -21,7 +21,12 @@ def compute_on_dataset(model, data_loader, device, timer=None):
         with torch.no_grad():
             if timer:
                 timer.tic()
-                output = model(images.to(device))
+                if isinstance(images, dict):
+                    for k, v in images.items():
+                        images[k] = v.to(device)
+                else:
+                    images = images.to(device)
+                output = model(images)
             if timer:
                 timer.toc()
 
