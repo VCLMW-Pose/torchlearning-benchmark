@@ -38,7 +38,8 @@ _C.INPUT = CN()
 
 # Add expected transforms to the tuple, and edit transform configurations with
 # following settings.
-_C.INPUT.TRANSFORMS = ()
+_C.INPUT.TRAIN_TRANSFORMS = ()
+_C.INPUT.TEST_TRANSFORMS = ()
 
 
 # ===========================  Image transforms  ==============================
@@ -60,7 +61,7 @@ _C.INPUT.PIXEL_STD = [1., 1., 1.]
 # Convert image to RGB format, in range 0-255
 _C.INPUT.TO_RGB255 = True
 
-# -----------------------------  ColorJitter  ----------------------------------
+# -----------------------------  ColorJitter  ---------------------------------
 _C.INPUT.BRIGHTNESS = 0.0
 _C.INPUT.CONTRAST = 0.0
 _C.INPUT.SATURATION = 0.0
@@ -81,6 +82,26 @@ _C.INPUT.PAD_TEST = ()
 _C.INPUT.HMS_SIZE = ()
 _C.INPUT.HMS_SIGMA = 2
 _C.INPUT.HMS_POP_KP = True
+
+# ------------------------------- SplitSourceRef ------------------------------
+# -------------------------- Resampler/FixedResampler -------------------------
+_C.INPUT.RESAMPLE_NUM = 1024
+
+# -------------------------- RandomJitter (Point cloud) -----------------------
+_C.INPUT.PCJITTER_SCALE = 0.01
+_C.INPUT.PCJITTER_CLIP = 0.05
+
+# --------------------------- RandomCrop (Point cloud) ------------------------
+_C.INPUT.PCCROP_P_KEEP = [0.7, 0.7]
+
+# ------------------ RandomTransformSE3/RandomTransformSE3_euler --------------
+_C.INPUT.ROT_MAG = 45.0
+_C.INPUT.TRANS_MAG = 0.5
+_C.INPUT.RANDOM_MAG = False
+
+# ------------------------------- RandomRotatorZ ------------------------------
+
+# ---------------------------------
 
 # -----------------------------------------------------------------------------
 # Dataset
@@ -119,6 +140,9 @@ _C.SOLVER.BIAS_LR_FACTOR = 2
 _C.SOLVER.MOMENTUM = 0.9
 _C.SOLVER.WEIGHT_DECAY = 0.0005
 _C.SOLVER.WEIGHT_DECAY_BIAS = 0
+
+# ------------------------------------ Adam ------------------------------------
+_C.SOLVER.BETAS = (0.9, 0.999)
 
 _C.SOLVER.SCHEDULER = "WarmupMultiStep"
 

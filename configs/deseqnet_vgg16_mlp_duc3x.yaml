@@ -6,7 +6,8 @@ MODEL:
 
 INPUT:
 #  TRANSFORMS: ("ToTensor", "Pad3D", "Normalize", "GenerateHMS")
-  TRANSFORMS: ("ToTensor", "Pad3D", "GenerateHMS")
+  TRAIN_TRANSFORMS: ("ToTensor", "Pad3D", "GenerateHMS")
+  TEST_TRANSFORMS: ("ToTensor", "Pad3D", "GenerateHMS")
   # Pad3D
   PAD_TRAIN: (9, 9, 10, 9)
   PAD_TEST: (9, 9, 10, 9)
@@ -20,8 +21,8 @@ INPUT:
 
 DATASETS:
   TRAIN: ("mwpose_train",)
-  TEST: ("mwpose_test",)
-#  TEST: ("mwpose_throughwall",)
+#  TEST: ("mwpose_test",)
+  TEST: ("mwpose_throughwall",)
 
 DATALOADER:
   NUM_WORKERS: 1

@@ -1,0 +1,16 @@
+{
+    "model": "RPMNetEarlyFusion",
+    "no_slack": true,
+    "num_sk_iter": 5,
+    "num_train_reg_iter": 2,
+    "num_reg_iter": 5,
+    "wt_inliers": 1e-2,
+    "loss_type": "mae",
+
+    "feat_extractor": {
+        "features": ["ppf", "dxyz", "xyz"],
+        "feature_dim": 96,
+        "radius": 0.3,
+        "num_neighbors":64
+    }
+}

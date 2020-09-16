@@ -5,7 +5,8 @@ MODEL:
   WEIGHT: ""
 
 INPUT:
-  TRANSFORMS: ("Resize", "ToTensor", "Normalize")
+  TRAIN_TRANSFORMS: ("Resize", "ToTensor", "Normalize")
+  TEST_TRANSFORMS: ("Resize", "ToTensor", "Normalize")
   # Resize
   MAX_SIZE_TRAIN: 28
   MIN_SIZE_TRAIN: 28

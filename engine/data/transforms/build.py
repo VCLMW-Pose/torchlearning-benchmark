@@ -12,7 +12,7 @@ def build_transforms(cfg, is_train=True):
 
     """
     transform = list()
-    trans_configs = cfg.INPUT.TRANSFORMS
+    trans_configs = cfg.INPUT.TRAIN_TRANSFORMS if is_train else cfg.INPUT.TEST_TRANSFORMS
 
     for trans in trans_configs:
         try:
@@ -96,6 +96,63 @@ def build_transforms(cfg, is_train=True):
                     hms_size=cfg.INPUT.HMS_SIZE,
                     sigma=cfg.INPUT.HMS_SIGMA,
                 )
+            ]
+        elif trans == "SplitSourceRef":
+            transform += [
+                factory()
+            ]
+        elif trans == "Resampler":
+            transform += [
+                factory(
+                    num=cfg.INPUT.RESAMPLE_NUM,
+                )
+            ]
+        elif trans == "FixedResampler":
+            transform += [
+                factory(
+                    num=cfg.INPUT.RESAMPLE_NUM,
+                )
+            ]
+        elif trans == "RandomJitter":
+            transform += [
+                factory(
+                    scale=cfg.INPUT.PCJITTER_SCALE,
+                    clip=cfg.INPUT.PCJITTER_CLIP
+                )
+            ]
+        elif trans == "RandomCrop":
+            transform += [
+                factory(
+                    p_keep=cfg.INPUT.PCCROP_P_KEEP,
+                )
+            ]
+        elif trans == "RandomTransformSE3":
+            transform += [
+                factory(
+                    rot_mag=cfg.INPUT.ROT_MAG,
+                    trans_mag=cfg.INPUT.TRANS_MAG,
+                    random_mag=cfg.INPUT.RANDOM_MAG
+                )
+            ]
+        elif trans == "RandomTransformSE3_euler":
+            transform += [
+                factory(
+                    rot_mag=cfg.INPUT.ROT_MAG,
+                    trans_mag=cfg.INPUT.TRANS_MAG,
+                    random_mag=cfg.INPUT.RANDOM_MAG
+                )
+            ]
+        elif trans == "RandomRotatorZ":
+            transform += [
+                factory()
+            ]
+        elif trans == "ShufflePoints":
+            transform += [
+                factory()
+            ]
+        elif trans == "SetDeterministic":
+            transform += [
+                factory()
             ]
 
     return T.Compose(transform)

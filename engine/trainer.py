@@ -42,12 +42,17 @@ def do_train(
         iteration = iteration + 1
         arguments["iteration"] = iteration
 
-        images = images.to(device)
+        if isinstance(images, dict):
+            for k, v in images.items():
+                images[k] = v.to(device)
+        else:
+            images = images.to(device)
         for k, v in targets.items():
             targets[k] = v.to(device)
 
         loss_dict = model(images, targets)
-        losses = sum(loss for loss in loss_dict.values())
+        losses = torch.sum(torch.stack(list(loss_dict.values())), dim=0)
+        # losses = sum(loss for loss in loss_dict.values())
 
         meters.update(loss=losses, **loss_dict)
 

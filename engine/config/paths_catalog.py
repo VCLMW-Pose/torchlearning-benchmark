@@ -30,6 +30,10 @@ class DatasetCatalog(object):
             "root": "mwpose_throughwall/",
             "size": (360, 640),
             "mode": "mwpose"
+        },
+        "modelnet40": {
+            "root": "modelnet40/",
+            "categoryfile": "modelnet40_half1.txt",
         }
     }
 
@@ -56,6 +60,17 @@ class DatasetCatalog(object):
             )
             return dict(
                 factory="MWPose",
+                args=args,
+            )
+        elif "modelnet" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                root=os.path.join(data_dir, attrs["root"]),
+                categoryfile=attrs["categoryfile"]
+            )
+            return dict(
+                factory="ModelNetHdf",
                 args=args,
             )
         # elif "your dataset name" in name:

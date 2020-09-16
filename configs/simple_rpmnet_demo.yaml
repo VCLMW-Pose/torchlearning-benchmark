@@ -1,0 +1,61 @@
+MODEL:
+  DEVICE: "cpu"
+  META_ARCH: "RPMNetEarlyFusion"
+  CONFIG: "../configs/rpmnet/rpmnet.json"
+  WEIGHT: ""
+
+INPUT:
+#  TRANSFORMS: ("ToTensor", "Pad3D", "Normalize", "GenerateHMS")
+
+  TRAIN_TRANSFORMS: ("SplitSourceRef", "RandomTransformSE3_euler", "Resampler", "RandomJitter", "ShufflePoints")
+  TEST_TRANSFORMS: ("SetDeterministic", "SplitSourceRef", "RandomTransformSE3_euler", "Resampler", "RandomJitter", "ShufflePoints")
+
+  RESAMPLE_NUM: 1024
+
+  # -------------------------- RandomJitter (Point cloud) -----------------------
+  PCJITTER_SCALE: 0.01
+  PCJITTER_CLIP: 0.05
+
+  # --------------------------- RandomCrop (Point cloud) ------------------------
+  PCCROP_P_KEEP: [0.7, 0.7]
+
+  # ------------------ RandomTransformSE3/RandomTransformSE3_euler --------------
+  ROT_MAG: 45.0
+  TRANS_MAG: 0.5
+  RANDOM_MAG: False
+
+DATASETS:
+  TRAIN: ("modelnet40",)
+#  TEST: ("mwpose_test",)
+  TEST: ("modelnet40",)
+
+DATALOADER:
+  NUM_WORKERS: 0
+  SHUFFLE: True
+
+SOLVER:
+  MAX_ITER: 160000
+
+  OPTIMIZER: "Adam"
+  BASE_LR: 0.1
+  BIAS_LR_FACTOR: 2
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0
+  MOMENTUM: 0.9
+
+  SCHEDULER: "WarmupMultiStep"
+  GAMMA: 0.1
+  STEPS: (10000, 20000,)
+  WARMUP_FACTOR: 0.333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: "linear"
+
+  CHECKPOINT_PERIOD: 2500
+  TEST_PERIOD: 500
+  IMS_PER_BATCH: 1
+
+TEST:
+  IMS_PER_BATCH: 1
+
+OUTPUT_DIR: "../models/rpmnet/"
+SAVE_TO_DISK: True

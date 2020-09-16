@@ -64,7 +64,7 @@ class MWPose(Dataset):
         anno = json.load(anno)
         target = Container()
 
-        assert len(anno) == 1, 'Multi-person scenario not implemented.'
+        assert len(anno) == 1, 'Multi-person scenario not implemented. %s' % self.ann_paths[idx]
         anno = anno[0]
         anno = [anno[name][:] for name in self.names]
 

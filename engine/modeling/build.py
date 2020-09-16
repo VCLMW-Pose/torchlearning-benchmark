@@ -1,12 +1,14 @@
 # Copyright (c) MW-Pose Group, 2020
 
 from .network import (
+    RPMNetEarlyFusion,
     MNISTNet,
     DeSeqNet,
 )
 
 _META_ARCHITECTURES = {"MNISTNet": MNISTNet,
                        "DeSeqNet": DeSeqNet,
+                       "RPMNetEarlyFusion": RPMNetEarlyFusion,
                        }
 
 
