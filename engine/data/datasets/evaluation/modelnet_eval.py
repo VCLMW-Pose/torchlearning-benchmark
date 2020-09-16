@@ -15,24 +15,40 @@ def do_modelnet_evaluation(predictions, gts, output_folder):
         gts (dict): Ground truth for every batch
     """
     logger = logging.getLogger("torchlearning-benchmark")
-    accuracy = 0
+    # accuracy = 0
     denominator = 0
+
+    metrics = dict(
+        r_mse=0,
+        r_mae=0,
+        t_mse=0,
+        t_mae=0,
+        err_r_deg=0,
+        err_t=0,
+        chamfer_dist=0
+    )
 
     for k in predictions.keys():
         pred = predictions[k]
         gt = gts[k]
 
-        # gt = gt["labels"]
+        pred_transforms = pred["transform"]
+        target_transforms = gt["transform"]
+        data = pred["data"]
+        denominator += target_transforms.shape[0]
 
-        accuracy += torch.sum(pred == gt).numpy()
-        denominator += pred.shape[0]
+        _metrics = compute_metrics(data, target_transforms, pred_transforms)
+        for k, v in _metrics.items():
+            metrics[k] += v
 
-    accuracy /= float(denominator)
+    for k, v in metrics.items():
+        metrics[k] /= denominator
     logger.info(
-        "Evaluation on MNIST test set, accuracy: {}".format(accuracy)
+        "Evaluation on MNIST test set, {}".format(", "
+              .join(["%s: %f" % (k, v) for k, v in metrics.items()]))
     )
 
-    return accuracy
+    return metrics
 
 
 def save_point_cloud(data):

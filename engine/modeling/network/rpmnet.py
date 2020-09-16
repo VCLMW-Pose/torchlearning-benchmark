@@ -728,7 +728,7 @@ class RPMNet(nn.Module):
             endpoints['alpha'] = np.stack(all_alpha, axis=0)
 
             return self._compute_losses(data, target["transform"], transforms, endpoints, self.loss_type)
-        return {"transform": transforms[-1], "pred_xyz": xyz_src_t, "target_xyz": xyz_ref, "pred_norm": norm_src_t}
+        return {"transform": transforms[-1], "data": data}
 
 
 class RPMNetEarlyFusion(RPMNet):
