@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from engine.data import build_data_loader
 from engine.utils.metric_logger import MetricLogger
+from engine.utils.miscellaneous import dict2device
 from engine.inference import inference
 
 
@@ -42,11 +43,7 @@ def do_train(
         iteration = iteration + 1
         arguments["iteration"] = iteration
 
-        if isinstance(images, dict):
-            for k, v in images.items():
-                images[k] = v.to(device)
-        else:
-            images = images.to(device)
+        images = dict2device(images, device)
         for k, v in targets.items():
             targets[k] = v.to(device)
 

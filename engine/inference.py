@@ -9,6 +9,7 @@ from tqdm import tqdm
 from engine.data.datasets.evaluation import evaluate
 from engine.data.datasets.save import torchlearning_save
 from engine.utils.timer import Timer, get_time_str
+from engine.utils.miscellaneous import dict2device
 
 
 def compute_on_dataset(model, data_loader, device, timer=None):
@@ -21,22 +22,12 @@ def compute_on_dataset(model, data_loader, device, timer=None):
         with torch.no_grad():
             if timer:
                 timer.tic()
-                if isinstance(images, dict):
-                    for k, v in images.items():
-                        images[k] = v.to(device)
-                else:
-                    images = images.to(device)
+                images = dict2device(images, device)
                 output = model(images)
             if timer:
                 timer.toc()
 
-            if isinstance(output, dict):
-                for k, v in output.items():
-                    output[k] = v.to(cpu_device)
-            elif isinstance(output, list):
-                output = [o.to(cpu_device) for o in output]
-            else:
-                output = output.to(cpu_device)
+            output = dict2device(output, cpu_device)
         results_dict.update(
             {idx: output}
         )

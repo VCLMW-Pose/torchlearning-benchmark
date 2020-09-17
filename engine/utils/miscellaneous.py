@@ -1,4 +1,6 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+from ctypes import Union
+
 import numpy as np
 
 import errno
@@ -22,3 +24,16 @@ def to_numpy(tensor):
         return tensor
     else:
         raise NotImplementedError
+
+
+def dict2device(data: Union[dict, list, torch.Tensor], device):
+    """Convert torch.Tensor dictionary container to designated device"""
+    if isinstance(data, dict):
+        for k, v in data.items():
+            data[k] = v.to(device)
+        return data
+    elif isinstance(data, torch.Tensor):
+        data = data.to(device)
+        return data
+    elif isinstance(data, list):
+        return [o.to(device) for o in data]
