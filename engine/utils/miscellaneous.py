@@ -28,7 +28,10 @@ def dict2device(data, device):
     """Convert torch.Tensor dictionary container to designated device"""
     if isinstance(data, dict):
         for k, v in data.items():
-            data[k] = v.to(device)
+            if isinstance(v, dict):
+                data[k] = dict2device(v, device)
+            else:
+                data[k] = v.to(device)
         return data
     elif isinstance(data, torch.Tensor):
         data = data.to(device)
