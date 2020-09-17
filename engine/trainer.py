@@ -101,7 +101,7 @@ def do_train(
             with torch.no_grad():
                 # Should be one image for each GPU:
                 for iteration_val, (images_val, targets_val) in enumerate(tqdm(data_loader_val)):
-                    images_val = images_val.to(device)
+                    images_val = dict2device(images_val, device)
                     for k, v in targets_val.items():
                         targets_val[k] = v.to(device)
                     loss_dict = model(images_val, targets_val)
