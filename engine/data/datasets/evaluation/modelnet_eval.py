@@ -38,8 +38,9 @@ def do_modelnet_evaluation(predictions, gts, output_folder):
         denominator += target_transforms.shape[0]
 
         _metrics = compute_metrics(data, target_transforms, pred_transforms)
+        # print(_metrics)
         for k, v in _metrics.items():
-            metrics[k] += v
+            metrics[k] += np.sum(v)
 
     for k, v in metrics.items():
         metrics[k] /= denominator
@@ -82,7 +83,7 @@ def compute_metrics(data, target, pred_transforms):
 
         # Rotation, translation errors (isotropic, i.e. doesn't depend on error
         # direction, which is more representative of the actual error)
-        concatenated = se3.concatenate(se3.inverse(gt_transforms), pred_transforms)
+        concatenated = torch.from_numpy(se3.concatenate(torch.from_numpy(se3.inverse(gt_transforms)), to_numpy(pred_transforms)))
         rot_trace = concatenated[:, 0, 0] + concatenated[:, 1, 1] + concatenated[:, 2, 2]
         residual_rotdeg = torch.acos(torch.clamp(0.5 * (rot_trace - 1), min=-1.0, max=1.0)) * 180.0 / np.pi
         residual_transmag = concatenated[:, :, 3].norm(dim=-1)
