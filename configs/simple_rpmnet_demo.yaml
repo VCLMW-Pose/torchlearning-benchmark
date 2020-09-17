@@ -1,5 +1,5 @@
 MODEL:
-  DEVICE: "cpu"
+  DEVICE: "cuda"
   META_ARCH: "RPMNetEarlyFusion"
   CONFIG: "../configs/rpmnet/rpmnet.json"
   WEIGHT: ""
@@ -52,10 +52,10 @@ SOLVER:
 
   CHECKPOINT_PERIOD: 2500
   TEST_PERIOD: 1
-  IMS_PER_BATCH: 1
+  IMS_PER_BATCH: 2
 
 TEST:
-  IMS_PER_BATCH: 1
+  IMS_PER_BATCH: 8
 
 OUTPUT_DIR: "../models/rpmnet/"
 SAVE_TO_DISK: True
